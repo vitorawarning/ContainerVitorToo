@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+<ui:composition template="/templates/modelo.xhtml">
+	<ui:define name="cabecalho">
+		<!-- <p:toolbar>
+			<f:facet name="left">
+				<p:outputLabel value="WIKIDFTRANS"
+					style="font-size: 16px !important;" />
+			</f:facet>
+		</p:toolbar>
+	</ui:define>
+
+	<ui:define name="opcoes">
+		<h:form>
+			<p:menu>
+				<p:submenu label="Menu">
+					<p:menuitem value="Página Principal"
+						action="#{MB_Redirect.indexHome()}" />
+					<p:menuitem value="Cadastrar Usuário"
+						action="cadastroUser.xhtml?faces-redirect=true" />
+				</p:submenu>
+			</p:menu>
+		</h:form> -->
+		
+				<h:form id="frmInfo">
+			<p:toolbar>
+
+				<f:facet name="left">
+					<p:outputLabel value="WIKIDFTRANS"
+						style="font-size: 16px !important;" />
+				</f:facet>
+				<f:facet name="right">
+					<p:outputLabel
+						value="Seja bem vindo(a) : #{autenticacaoBean.user.nome} &nbsp; &nbsp;"
+						rendered="#{!autenticacaoBean.logado}" />
+				</f:facet>
+				<f:facet name="right">
+					<p:commandButton value="Logar"
+						action="login.xhtml?faces-redirect=true"
+						rendered="#{autenticacaoBean.logado}" />
+					<p:commandButton value="Sair"
+						actionListener="#{autenticacaoBean.out()}"
+						rendered="#{autenticacaoBean.sair}"
+						update="frmInfo :frmInf " />
+				</f:facet>
+
+
+			</p:toolbar>
+		</h:form>
+	</ui:define>
+
+		<ui:define name="opcoes">
+			<h:form>
+				<p:menu>
+					<p:submenu label="Menu">
+						<p:menuitem value="Página Principal"
+							action="#{MB_Redirect.indexHome()}" />
+						<p:menuitem value="Cadastrar Usuário"
+						    rendered="#{autenticacaoBean.user.tipoAcesso.tipo == 1? true : false}"
+							action="/pages/superUser/cadastroUser.xhtml?faces-redirect=true" />
+					</p:submenu>
+				</p:menu>
+			</h:form> 
+		</ui:define>
+
+	<ui:define name="conteudo">
+		<p:separator />
+		<div align="center">
+			<h2>
+				<h:outputText value="Cadastro de Informação" />
+			</h2>
+		</div>
+		<p:separator />
+		<h:form enctype="multipart/form-data" id="frmInf">
+			<p:panel header="Dados Informação">
+				<h:panelGrid columns="3">
+					<p:outputLabel value="Usuário :" />
+					<p:inputText value="#{autenticacaoBean.user.nome}" id="tagNome"
+						disabled="true" style="font-weight: bold">
+						<f:validateBean />
+					</p:inputText>
+					<p:message for="tagNome" display="text" />
+
+					<p:outputLabel value="Setor :" />
+					<p:inputText value="#{autenticacaoBean.user.setor.setor}"
+						disabled="true" id="tagSetor" style="font-weight: bold">
+						<f:validateBean />
+					</p:inputText>
+					<p:message for="tagSetor" display="text" />
+					<p:outputLabel value="Título :" />
+					<p:inputText value="#{MB_Informacao.informacao.titulo}" title="Informe o título da informação"
+						maxlength="30" size="30" id="tagTitulo">
+						<f:validateBean />
+					</p:inputText>
+					<p:message for="tagTitulo" display="text" />
+					<p:outputLabel value="Descrição :" />
+					
+					
+					<p:column>
+						<!--  <p:inputText value="#{MB_Informacao.informacao.conteudo}" title="Detalhe o conteúdo informação"
+							id="tagDetalhe">
+							<f:validateBean />-->
+						<p:inputTextarea rows="10" cols="50" queryDelay="750" minQueryLength="4" id="tagDetalhe" value="#{MB_Informacao.informacao.conteudo}" >
+							<f:validateBean />
+						</p:inputTextarea>
+						<!-- </p:inputText> -->
+						<!-- <p:message for="tagDetalhe" display="text" /> -->
+					</p:column>
+						 <p:message for="tagDetalhe" display="text" /> 
+
+
+
+					<!-- <p:outputLabel for="mask" value="Data :" />
+					<p:calendar id="mask" value="#{MB_Informacao.informacao.data}"
+						pattern="dd-MM-yyyy" mask="true" effect="fold"
+						mindate="MB_Informacao.data" maxdate="MB_Informacao.data"
+						title="Data atual" /> -->
+				</h:panelGrid>
+			</p:panel>
+			<p:panel header="Dados Arquivo - Anexar Arquivo" id="dados">
+				<br />
+				<p:outputLabel value="Nome :" />&nbsp;&nbsp;
+				<p:inputText value="#{MB_Informacao.arq.nome}" title="Informe o nome do arquivo"/>
+				<br />
+				<br />
+				<p:outputLabel value="Arquivo" /><br/>
+				<h:panelGrid columns="2">
+					<p:fileUpload style="width:500px"
+						allowTypes="/(\.|\/)(pdf|jpe?g|gif|png|tiff|bmp|docx?|xlsx?|txt)$/"
+						label="Procurar..." cancelLabel="Cancelar Envio" fileLimit="1"
+						dragDropSupport="true" sizeLimit="25000000"
+						invalidFileMessage="Formato do arquivo não suportado"
+						invalidSizeMessage="Tamanho do arquivo não permitido"
+						fileLimitMessage="Só é permitido 1 arquivo" uploadLabel="Enviar" 
+						fileUploadListener="#{MB_Informacao.upload}" mode="advanced" update="checked :msgGlobal"
+						auto="true"/>
+						<p:graphicImage value="#{MB_Informacao.caminho}" id="checked" style="width: 40px"/>
+				</h:panelGrid>
+					<br/><h:outputText value="Formatos aceitos : .pdf , .jpg, .jpeg, .gif, .png, .tiff, .bmp, .doc, .docx, .xls, .xlsx, .txt" />
+			</p:panel>
+
+			<br/><p:commandButton value="Cadastrar" actionListener="#{MB_Informacao.save}" update=":msgGlobal :frmInf"/>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
+</html>

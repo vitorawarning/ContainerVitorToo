@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+<ui:composition template="/templates/modelo.xhtml">
+	<ui:define name="cabecalho">
+	<!-- 	<p:toolbar>
+			<f:facet name="left">
+				<p:outputLabel value="WIKIDFTRANS"
+					style="font-size: 16px !important;" />
+			</f:facet>
+		</p:toolbar>-->
+			<h:form id="frmUser">
+			<p:toolbar>
+
+				<f:facet name="left">
+					<p:outputLabel value="WIKIDFTRANS"
+						style="font-size: 16px !important;" />
+				</f:facet>
+				<f:facet name="right">
+					<p:outputLabel
+						value="Seja bem vindo(a) : #{autenticacaoBean.user.nome} &nbsp; &nbsp;"
+						rendered="#{!autenticacaoBean.logado}" />
+				</f:facet>
+				<f:facet name="right">
+					<p:commandButton value="Logar"
+						action="login.xhtml?faces-redirect=true"
+						rendered="#{autenticacaoBean.logado}" />
+					<p:commandButton value="Sair"
+						actionListener="#{autenticacaoBean.out()}"
+						rendered="#{autenticacaoBean.sair}"
+						update=":frmUser :frmCadastro :msgGlobal " />
+				</f:facet>
+
+
+			</p:toolbar>
+		</h:form>
+	</ui:define>
+
+	<ui:define name="opcoes">
+		<h:form>
+			<p:menu>
+				<p:submenu label="Menu">
+					<p:menuitem value="Página Principal"
+						action="#{MB_Redirect.indexHome()}" />
+					<p:menuitem value="Cadastrar Informação"
+						action="#{MB_Redirect.informacaoHome()}"/>
+				</p:submenu>
+			</p:menu>
+		</h:form> 
+			
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<p:separator />
+			<div align="center"><h2><h:outputText value="Cadastro de Usuário"/></h2></div>
+		<p:separator />
+		<h:form id="frmCadastro">
+			<p:panel header="Dados Usuário">
+				<h:panelGrid columns="3" id="tabela">
+					<p:outputLabel value="Nome :" />
+					<p:inputText maxlength="30" size="20" id="tagNome"
+						value="#{MBUser.user.nome}" title="Informe o nome do usuário">
+						<f:validateBean />
+					</p:inputText>
+					<p:message for="tagNome" display="text" />
+					<p:outputLabel value="Matricula :" />
+					<p:inputText maxlength="30" size="20"
+						value="#{MBUser.user.matricula}" id="tagMatricula" title="Informe a matricula do usuário">
+						<f:validateBean />
+					</p:inputText>
+					<p:message for="tagMatricula" display="text" />
+	
+					<p:outputLabel value="Informe o tipo do usuário : "/>
+					<p:selectOneRadio value="#{MBUser.tipo}" id="tagTipo">
+						<f:selectItem itemLabel="Administrador" itemValue="1"/>
+						<f:selectItem itemLabel="Usuário" itemValue="2" />
+					</p:selectOneRadio>
+					<p:message for="tagTipo" display="text" />
+				
+					<p:outputLabel value="Senha" for="pass1" />
+					<p:password id="pass1" value="#{MBUser.user.senha}" match="pass2"
+						label="Senha" required="true" requiredMessage="O campo senha é obrigatorio"/>
+					<p:message for="pass1" display="text" />
+					
+					<p:outputLabel value="Confirme a Senha        " for="pass2" />
+					<p:password id="pass2" value="#{MBUser.user.senha}"
+						label="Confirme a senha" required="true" requiredMessage="O campo senha é obrigatorio"/>
+					<p:message for="pass2" display="text" />
+			
+					<p:outputLabel value="Setor"/>
+					<p:selectOneMenu filter="true" value="#{MBUser.user.setor}" converter="SetorConverter" id="tagSetor">
+						<f:selectItem noSelectionOption="true" itemLabel="Selecione um Setor"/>
+						<f:selectItems value="#{MBUser.setores}"  var="setores" itemLabel="#{setores.setor}" itemValue="#{setores}"/>
+					</p:selectOneMenu>
+					<p:message for="tagSetor" display="text" />
+				
+			
+			
+	
+				</h:panelGrid>
+			</p:panel>
+			<br/><br/><p:commandButton value="Cadastrar" update=":msgGlobal :frmCadastro" actionListener="#{MBUser.saveUser()}"/>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
+</html>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Detalhamento</title>
+	<h:outputStylesheet library="css" name="style.css"/>
+</h:head>
+<h:body>
+		<h:form id="frmDetalhe" enctype="multipart/form-data">
+			<p:dataTable emptyMessage="Não há informações cadastradas" value="#{MB_View.informacoes}" var="detalhe" >
+				
+				<p:column headerText="Id" style="background-image: linear-gradient(to bottom,   #ffd480,white) !important;">
+					<h:outputText value="#{detalhe.id}" />
+				</p:column>
+				<p:column headerText="Responsável" style="background-image: linear-gradient(to bottom,  #ffd480,white) !important;">
+					<h:outputText value="#{detalhe.usuario.nome}" />
+				</p:column>
+				<p:column headerText="Titulo" style="background-image: linear-gradient(to bottom,  #ffd480,white) !important;">
+					<h:outputText value="#{detalhe.titulo}" />
+				</p:column>
+				<p:column headerText="Descrição" style="background-image: linear-gradient(to bottom,  #ffd480,white) !important;">
+					 <h:outputText value="#{detalhe.conteudo}" escape="false" /> 
+				</p:column>
+				<p:column headerText="Data" style="background-image: linear-gradient(to bottom,  #ffd480,white) !important;">
+					<h:outputText value="#{detalhe.data}" />
+				</p:column>
+				<p:column headerText="Setor" style="background-image: linear-gradient(to bottom,  #ffd480,white) !important;">
+					<h:outputText value="#{detalhe.setor.setor}" />
+				</p:column>
+			  	<p:column headerText="Arquivo" rendered="#{MB_Listagem.download}" style="background-image: linear-gradient(to bottom,  #ffd480,white) !important;">
+					<p:commandButton value="Download" ajax="false" 
+						onclick="PrimeFaces.monitorDownload(start, stop);"
+						icon="ui-icon-arrowthick-1-s"  process="@this">
+						<p:fileDownload value="#{MB_Download.dowload(detalhe)}"/> 
+					
+					</p:commandButton>
+				</p:column>  
+			</p:dataTable>
+		</h:form>
+</h:body>
+
+</html>
+	  

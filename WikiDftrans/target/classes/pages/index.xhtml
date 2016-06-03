@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:composition template="/templates/modelo.xhtml">
+	<ui:define name="cabecalho">
+		<h:form id="frmLog">
+			<p:toolbar>
+
+				<f:facet name="left">
+					<p:outputLabel value="WIKIDFTRANS"
+						style="font-size: 16px !important;" />
+				</f:facet>
+				<f:facet name="right">
+					<p:outputLabel
+						value="Seja bem vindo(a) : #{autenticacaoBean.user.nome} &nbsp; &nbsp;"
+						rendered="#{!autenticacaoBean.logado}" />
+				</f:facet>
+				<f:facet name="right">
+					<p:commandButton value="Logar"
+						action="login.xhtml?faces-redirect=true"
+						rendered="#{autenticacaoBean.logado}" />
+					<p:commandButton value="Sair"
+						actionListener="#{autenticacaoBean.out()}"
+						rendered="#{autenticacaoBean.sair}"
+						update=":frmLog :frmMenu :msgGlobal " />
+				</f:facet>
+			</p:toolbar>
+		</h:form>
+	</ui:define>
+
+
+	<ui:define name="opcoes">
+		<h:form>
+			<p:menu model="#{MB_Menu.menuModel}" />
+		</h:form>
+		<h:form id="frmMenu">
+			<p:separator />
+			<p:menu>
+				<p:submenu label="Opções" rendered="#{!autenticacaoBean.logado}">
+					<p:menuitem value="Cadastrar usuário"
+						rendered="#{autenticacaoBean.user.tipoAcesso.tipo == 1? true : false}"
+					 	action="superUser/cadastroUser.xhtml?faces-redirect=true" />
+					<p:menuitem value="Cadastrar Informação"
+						rendered="#{!autenticacaoBean.logado}"
+						action="gear/cadastroInformacao.xhtml?faces-redirect=true" />
+				</p:submenu>
+			</p:menu>
+		</h:form>
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<!-- Cabeçalho -->
+
+		<f:facet name="header">
+			<h:outputText value="Informações" style="font-size: 15px !important;" />
+		</f:facet>
+
+		<h:form id="frmInformacaoListagem">
+			<!-- List Informações -->
+			<p:dataTable emptyMessage="Nenhum registro encontrado"
+				value="#{MB_Listagem.informacoes}" var="informacoes"
+				paginator="true" rows="10" id="tblInformacoes">
+
+				<p:column headerText="CÓDIGO" sortBy="#{informacoes.id}"
+					style="width: 7%;">
+					<h:outputText value="#{informacoes.id}" />
+				</p:column>
+
+				<p:column headerText="TÍTULO" filterBy="#{informacoes.titulo}"
+					sortBy="#{informacoes.titulo}" style="width: 25%">
+					<h:outputText value="#{informacoes.titulo}" />
+				</p:column>
+
+				<p:column headerText="RESPONSÁVEL"
+					filterBy="#{informacoes.usuario.nome}"
+					sortBy="#{informacoes.usuario.nome}" style="width: 25%">
+					<h:outputText value="#{informacoes.usuario.nome}" />
+				</p:column>
+
+				<p:column headerText="DATA" filterBy="#{informacoes.data}"
+					sortBy="#{informacoes.data}" style="width: 9%">
+					<h:outputText value="#{informacoes.data}" />
+				</p:column>
+				<p:column headerText="" style="width: 7%">
+					<p:commandButton value="Detalhar"
+						actionListener="#{MB_Listagem.getDetalhamento()}"
+						update="@none" icon="ui-icon-search" process="@this">
+						<!--  onsuccess="PF('dialogo').show();"> -->
+						<f:param name="idInformacao" value="#{informacoes.id}" />
+						<!--  <f:setPropertyActionListener target="#{MB_Listagem.detalhe}"
+							value="#{informacoes}" /> -->
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+
+			<!-- <p:dialog header="Detalhamento-Informação" widgetVar="dialogo"
+				draggable="false" resizable="false">
+				<p:dataTable var="detalheinf" value="#{MB_Listagem.detalhe}"
+					rows="5" paginator="true" emptyMessage="Não há informações cadastradas">
+					<p:column headerText="Id:">
+						<h:outputText value="#{detalheinf.id}" />
+					</p:column>
+					<p:column headerText="Titulo">
+						<h:outputText value="#{detalheinf.titulo}" />
+					</p:column>
+					<p:column headerText="Descrição">
+						<h:outputText value="#{detalheinf.conteudo}" />
+					</p:column>
+					<p:column headerText="Data de criação:">
+						<h:outputText value="#{detalheinf.data}" />
+					</p:column>
+					<p:column headerText="Setor">
+						<h:outputText value="#{detalheinf.setor.setor}" />
+					</p:column>
+					<p:column headerText="Responsável">
+						<h:outputText value="#{detalheinf.usuario.nome}" />
+					</p:column>
+					<p:column headerText="Arquivo">
+						<p:commandButton value="Download" ajax="false"
+							onclick="PrimeFaces.monitorDownload(start, stop);"
+							icon="ui-icon-arrowthick-1-s" rendered="#{MB_Listagem.download}">
+							<p:fileDownload value="#{detalheinf.arquivo}" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</p:dialog> -->
+
+
+
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>
